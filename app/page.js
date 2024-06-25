@@ -12,14 +12,16 @@ export default function Home() {
 
   const saveproject = async () => {
     let a = await fetch("/api")
-    // let projects = localStorage.getItem("projects")
-    let projects = await a.json();
+    let projects = localStorage.getItem("projects")
+    let project = await a.json();
     if (projects) {
-      // setprojectarray(JSON.parse(projects))
-      setprojectarray(projects)
+      setprojectarray(JSON.parse(projects))
+      // setprojectarray(project)
     }
   }
   useEffect(() => {
+     let projects = localStorage.getItem("projects")
+    if (!projects) localStorage.setItem("projects", JSON.stringify([{id: uuidv4(),complete:0 ,end :"about 1 month" ,intern :"Aditya , Deepanshu, Rohit", leader:"Anuj Agrawal" ,start:"25 June 2024", title:"Sustainable Development"}]))
     saveproject()
   }, [])
 
@@ -35,7 +37,7 @@ export default function Home() {
       val.complete = 0
       setprojectarray([...projectarray, { id: uuidv4(), val }])
       let a = await fetch("/api", { method: "POST", body: JSON.stringify({ id: uuidv4(), val }), headers: { 'content-type': 'application/json' } })
-      // localStorage.setItem("projects", JSON.stringify([...projectarray, { id: uuidv4(), val }]))
+      localStorage.setItem("projects", JSON.stringify([...projectarray, { id: uuidv4(), val }]))
       ref.current.reset()
     }
   }
@@ -46,7 +48,7 @@ export default function Home() {
     let newprojectarray = projectarray.filter(item => item.id !== id)
     if (conf) {
       let a = await fetch("/api", { method: "DELETE", body: JSON.stringify({ id: id }), headers: { 'content-type': 'application/json' } })
-      // localStorage.setItem("projects", JSON.stringify(newprojectarray))
+      localStorage.setItem("projects", JSON.stringify(newprojectarray))
       setprojectarray(newprojectarray)
     }
   }
@@ -62,7 +64,7 @@ export default function Home() {
     let arr = newprojectarray[index].val
     let a = await fetch("/api", { method: "DELETE", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id }) })
     let b = await fetch("/api", { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, arr }) })
-    // localStorage.setItem("projects", JSON.stringify(newprojectarray))
+    localStorage.setItem("projects", JSON.stringify(newprojectarray))
     setprojectarray(newprojectarray)
   }
   const progressbar = async(e)=>{
@@ -75,7 +77,7 @@ export default function Home() {
     let arr = newprojectarray[index].val
     let a = await fetch("/api", { method: "DELETE", headers: {'content-type': 'application/json'}, body: JSON.stringify({ id: id }) })
     let b = await fetch("/api", { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, arr }) })
-    // localStorage.setItem("projects", JSON.stringify(newprojectarray))
+    localStorage.setItem("projects", JSON.stringify(newprojectarray))
     setprojectarray(newprojectarray)
   }
 
@@ -83,7 +85,7 @@ export default function Home() {
     <div className="text-center w-[100vw] bg-gradient-to-b from-green-50 to-green-200 h-screen">
       <div className=" text-[40px] px-10 font-bold ">PROJECT-MANAGER</div>
       <div className="text-[20px]">Track your projects</div>
-      <form className="mx-auto w-[50vw] my-5 flex flex-col items-center" onSubmit={handleSubmit(onSubmit)} ref={ref} action="./api/data" method="post" netlify>
+      <form className="mx-auto w-[50vw] my-5 flex flex-col items-center" onSubmit={handleSubmit(onSubmit)} ref={ref} action="./api/data" method="post" netlify="true">
         <input {...register("title")} className="w-full h-[40px] m-[15px] rounded-[20px] border-[2px] border-green-600 px-7" type="text" placeholder="Enter Title of your project" />
         <div className="flex align-middle justify-evenly relative w-full">
           <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" className="w-[20px] h-[20px] absolute top-6 right-3" />
@@ -123,7 +125,7 @@ export default function Home() {
                 <div className="w-[30%] flex flex-row"><img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" className="w-[30px] h-[30px] mx-5" />{item.val.leader}</div>
                 <div className="w-[40%] text-wrap">{item.val.intern}</div>
                 <div className="w-[40%] flex">
-                  <input type="range" min={0} max={100} step={10} onInput={e=>{progressbar(e)}} name={item.id} className={"accent-red-{item.val.complete}"}/>
+                  <input type="range" min={0} max={100} step={10} onInput={e=>{progressbar(e)}} name={item.id} className={"accent-red-{item.val.complete}"} defaultValue={item.val.complete}/>
                   <p className="font-bold text-[18px] ml-5">{item.val.complete}</p>
                 </div>
                 <div className="w-[20%] "><img className="w-[25%] mx-auto" src="https://cdn-icons-png.flaticon.com/128/2356/2356780.png" alt="" onClick={handleedit} name={item.id} /></div>
