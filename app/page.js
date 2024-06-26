@@ -20,7 +20,7 @@ export default function Home() {
     }
   }
   useEffect(() => {
-    if (!projectarray) localStorage.setItem("projects", JSON.stringify([{ id: uuidv4(), val: { complete: 0, end: "2024-07-27", intern: "Aditya , Deepanshu, Rohit", leader: "Anuj Agrawal", start: "2024-06-20", "title": "Sustainable Development" } }]))
+    if(!projectarray) localStorage.setItem("projects", JSON.stringify([ { id: uuidv4(), val: { complete: 0, end: "2024-07-27", intern: "Aditya , Deepanshu, Rohit", leader: "Anuj Agrawal", start: "2024-06-20", "title": "Sustainable Development"}}]))
     saveproject()
   }, [])
 
@@ -31,9 +31,9 @@ export default function Home() {
     }
     else {
       val.complete = 0
-      setprojectarray([...projectarray, { id: uuidv4(), val }])
+      setprojectarray([...projectarray, { id: uuidv4(), val:val }])
       // let a = await fetch("/api", { method: "POST", body: JSON.stringify({ id: uuidv4(), val }), headers: { 'content-type': 'application/json' } })
-      localStorage.setItem("projects", JSON.stringify([...projectarray, { id: uuidv4(), val }]))
+      localStorage.setItem("projects", JSON.stringify([...projectarray, { id: uuidv4(), val:val }]))
       ref.current.reset()
     }
   }
