@@ -11,9 +11,9 @@ export default function Home() {
   const { register, handleSubmit , setValue} = useForm();
 
   const saveproject = async () => {
-    let a = await fetch("/api")
+    // let a = await fetch("/api")
     let projects = localStorage.getItem("projects")
-    let project = await a.json();
+    // let project = await a.json();
     if (projects) {
       setprojectarray(JSON.parse(projects))
       // setprojectarray(project)
@@ -32,7 +32,7 @@ export default function Home() {
     else {
       val.complete = 0
       setprojectarray([...projectarray, { id: uuidv4(), val }])
-      let a = await fetch("/api", { method: "POST", body: JSON.stringify({ id: uuidv4(), val }), headers: { 'content-type': 'application/json' } })
+      // let a = await fetch("/api", { method: "POST", body: JSON.stringify({ id: uuidv4(), val }), headers: { 'content-type': 'application/json' } })
       localStorage.setItem("projects", JSON.stringify([...projectarray, { id: uuidv4(), val }]))
       ref.current.reset()
     }
@@ -43,7 +43,7 @@ export default function Home() {
     let id = e.target.name
     let newprojectarray = projectarray.filter(item => item.id !== id)
     if (conf) {
-      let a = await fetch("/api", { method: "DELETE", body: JSON.stringify({ id: id }), headers: { 'content-type': 'application/json' } })
+      // let a = await fetch("/api", { method: "DELETE", body: JSON.stringify({ id: id }), headers: { 'content-type': 'application/json' } })
       localStorage.setItem("projects", JSON.stringify(newprojectarray))
       setprojectarray(newprojectarray)
     }
@@ -69,8 +69,8 @@ export default function Home() {
     let newprojectarray = [...projectarray]
     newprojectarray[index].val.complete = e.target.value
     let arr = newprojectarray[index].val
-    let a = await fetch("/api", { method: "DELETE", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id }) })
-    let b = await fetch("/api", { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, arr }) })
+    // let a = await fetch("/api", { method: "DELETE", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id }) })
+    // let b = await fetch("/api", { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, arr }) })
     localStorage.setItem("projects", JSON.stringify(newprojectarray))
     setprojectarray(newprojectarray)
   }
