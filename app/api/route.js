@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb';
 import { NextResponse} from "next/server";
 
-const url = 'mongodb://localhost:27017';
+const url = "mongodb+srv://anujagrawal1804:tEHS1dIQ2zdjWjNV@projectsinfo.k7fms.mongodb.net/?retryWrites=true&w=majority&appName=projectsinfo";
 const client = new MongoClient(url);
 const dbName = 'myProjectManager';
 
@@ -28,6 +28,9 @@ export async function DELETE(req) {
     const db = client.db(dbName);
     const project = await req.json()
     const collection = db.collection('data');
-    const findResult = await collection.deleteOne(project)
+    const findResult = await collection.deleteOne(project, function(err, obj) {
+        if (err) throw err;
+        console.log(" document(s) deleted");
+      });
     return NextResponse.json({ findResult })
 }

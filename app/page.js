@@ -1,141 +1,75 @@
 "use client"
+
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
-import { useForm} from "react-hook-form";
-import { v4 as uuidv4 } from 'uuid';
-import { parseISO, format, formatDistance, differenceInMonths } from 'date-fns';
+import Link from "next/link";
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const ref = useRef()
-  const [projectarray, setprojectarray] = useState([])
-  const { register, handleSubmit , setValue} = useForm();
-
-  const saveproject = async () => {
-    // let a = await fetch("/api")
-    let projects = localStorage.getItem("projects")
-    // let project = await a.json();
-    if (projects) {
-      setprojectarray(JSON.parse(projects))
-      // setprojectarray(project)
-    }
-  }
-  useEffect(() => {
-    if(!projectarray) localStorage.setItem("projects", JSON.stringify([ { id: uuidv4(), val: { complete: 0, end: "2024-07-27", intern: "Aditya , Deepanshu, Rohit", leader: "Anuj Agrawal", start: "2024-06-20", "title": "Sustainable Development"}}]))
-    saveproject()
-  }, [])
-
-
-  const onSubmit = async (val) => {
-    if (val.title.length === 0 || val.intern.length === 0 || val.leader.length === 0 || val.start.length===0 || val.end.length===0) {
-      alert("field is empty")
-    }
-    else {
-      val.complete = 0
-      setprojectarray([...projectarray, { id: uuidv4(), val:val }])
-      // let a = await fetch("/api", { method: "POST", body: JSON.stringify({ id: uuidv4(), val }), headers: { 'content-type': 'application/json' } })
-      localStorage.setItem("projects", JSON.stringify([...projectarray, { id: uuidv4(), val:val }]))
-      ref.current.reset()
-    }
-  }
-
-  const handledelete = async (e) => {
-    let conf = confirm("do you want to delete the project?")
-    let id = e.target.name
-    let newprojectarray = projectarray.filter(item => item.id !== id)
-    if (conf) {
-      // let a = await fetch("/api", { method: "DELETE", body: JSON.stringify({ id: id }), headers: { 'content-type': 'application/json' } })
-      localStorage.setItem("projects", JSON.stringify(newprojectarray))
-      setprojectarray(newprojectarray)
-    }
-  }
-
-  const handleedit = async (e) => {
-    let pro = projectarray.filter(item => item.id === e.target.name)[0]
-    setValue("title", pro.val.title);
-    setValue("intern", pro.val.intern);
-    setValue("leader", pro.val.leader);
-    setValue("start", format(pro.val.start , 'yyyy-MM-dd'));
-    setValue("end", format(pro.val.start , 'yyyy-MM-dd'));
-    let id = e.target.name
-    let newprojectarray = projectarray.filter(item => item.id !== id)
-    setprojectarray(projectarray.filter(item => item.id !== id))
-    localStorage.setItem("projects", JSON.stringify(newprojectarray))
-  }
-  const progressbar = async (e) => {
-    let id = e.target.name;
-    let index = projectarray.findIndex(item => {
-      return item.id === id
-    })
-    let newprojectarray = [...projectarray]
-    newprojectarray[index].val.complete = e.target.value
-    let arr = newprojectarray[index].val
-    // let a = await fetch("/api", { method: "DELETE", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: id }) })
-    // let b = await fetch("/api", { method: "POST", headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, arr }) })
-    localStorage.setItem("projects", JSON.stringify(newprojectarray))
-    setprojectarray(newprojectarray)
-  }
-
-  return (<>
-    <div className="text-center w-[100vw] bg-gradient-to-b from-green-50 to-green-200 h-screen">
-      <div className=" text-[40px] px-10 font-bold ">PROJECT-MANAGER</div>
-      <div className="text-[20px]">Track your projects</div>
-      <form className="mx-auto w-[90vw] lg:w-[50vw] my-5 flex flex-col items-center" onSubmit={handleSubmit(onSubmit)} ref={ref} action="./api/data" method="post" netlify="true">
-        <input {...register("title")} className="w-full h-[40px] m-[15px] rounded-[20px] border-[2px] border-green-600 px-7" type="text" placeholder="Enter Title of your project" />
-        <div className="flex align-middle justify-evenly relative w-full">
-          <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" className="w-[30px] h-[30px] absolute top-[1.3em] right-[52%] invisible lg:visible" />
-          <input placeholder="Enter Team Members name" className=" w-[48%] h-[40px] my-[15px] rounded-[20px] border-[2px] border-green-600 px-7" type="text"  {...register("intern")} />
-          <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" className="w-[30px] h-[30px] absolute top-[1.3em] right-[1em] invisible lg:visible" />
-          <input placeholder="Enter project head's name" className=" w-[48%] h-[40px] my-[15px]  rounded-[20px] border-[2px] border-green-600 px-7" type="text"  {...register("leader")} />
+  const router = useRouter()
+  return (
+    <div className="bg-blue-600 text-gray-800 overflow-x-hidden">
+      <section className="bg-[url('https://t4.ftcdn.net/jpg/03/20/48/11/360_F_320481159_jHPOQEiPU26ZkjHeKIxV1sQyWQWMirCH.jpg')] bg-cover text-white text-center py-5 flex flex-row justify-evenly items-center ">
+        <div className="w-[40vw]">
+          <h1 className="text-5xl font-bold mb-4">Welcome to IONOTS-TASK-MANAGER</h1>
+          <p className="text-xl mb-8">To save time, faster growth, and provide the ideal Experience</p>
+          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-row">
+            <a className="bg-blue-900 text-white py-3 px-6 rounded-full text-lg hover:cursor-pointer mr-5 hover:bg-blue-800" onClick={() => router.push('/intern')}>Assigned task for intern</a>
+            <a className="bg-blue-900 text-white py-3 px-6 rounded-full text-lg hover:cursor-pointer hover:bg-blue-800" onClick={() => router.push('/company')}>Assign task to intern</a>
+          </div>
+          <a className="bg-blue-900 text-white my-3 py-3 px-3 rounded-full text-lg hover:cursor-pointer hover:bg-blue-800 w-[65%]" onClick={() => router.push('/internscore')}>Check Intern's Score</a></div>
         </div>
-        <div className="flex justify-center items-center flex-col lg:flex-row">
-          <p className="font-bold text-[20px] mx-5">Start Date :</p>
-          <input className="pasword w-full lg:w-[28%] h-[40px] my-[15px] rounded-[20px] border-[2px] border-green-600 px-7" type="date"  {...register("start")} />
-          <p className="font-bold text-[20px] mx-5">End Date :</p>
-          <input className="pasword w-full lg:w-[28%] h-[40px] my-[15px] rounded-[20px] border-[2px] border-green-600 px-7" type="date"  {...register("end")} />
+        <div>
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtO17bU49IwrHZQQyhFEuv-VNbfRB0HH6t4A&s" alt="" className="h-[565px] w-[40vw] rounded-full" />
         </div>
-        <div className="text-center w-full "><button className="w-full h-[40px] m-[15px] rounded-[20px] bg-green-800 text-white" type="submit">Save </button></div>
-      </form>
-      <div className="text-[20px] font-bold">Project Information</div>
-      {projectarray.length == 0 && <div> NO PROJECTS TO SHOW</div>}
-      {projectarray.length != 0 &&
-        <div className="container w-[80vw] my-[15px] text-center mx-auto">
-          <div className="w-[100%] h-auto bg-green-900 text-white flex py-2 border-[2px] border-black flex-col lg:flex-row">
-            <div className="flex lg:w-[50%] w-[100%] lg:pb-0 pb-2 mx-0 px-0 items-center align-middle">
-              <p className="w-[40%]">TITLE</p>
-              <p className="w-[30%]">DATE START</p>
-              <p className="w-[30%]">DEADLINE</p>
-              <p className="w-[30%]">LEADER</p>
+      </section>
+
+      <section id="about" className="py-8 bg-white">
+        <div className="mx-20 text-left flex justify-evenly items-center">
+          <div className="w-[500px]">
+            <h2 className="text-4xl font-bold mb-8">About Us</h2>
+            <p className="text-lg mb-8">At IONOTS-TASK-MANAGER, we harness the potential of real-time, project-based learning to empower individuals in the fields of Data Science and Artificial Intelligence. Our platform is designed to provide a dynamic educational experience that bridges the gap between theory and practical application. With a focus on hands-on projects, we cultivate an environment where learners can develop essential skills that prepare them for the demands of the tech industry.</p>
+          </div>
+          <div className="w-[500px]">
+            <img src="https://www.simplilearn.com/ice9/free_resources_article_thumb/Top_5_Roles_of_an_Effective_Project_Manager.jpg" alt="About Us" className="rounded-lg" />
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="py-8 bg-gray-100">
+        <div className="mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-8">Explore Our Features</h2>
+          <div className="flex flex-row justify-evenly">
+            <div>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0gdR5_5f7zn2UO9JdQXUwt1NzRnP_iqF4yw&s" alt="" className="h-[650px] w-[600px]" />
             </div>
-            <div className="flex lg:w-[50%] w-[100%] lg:pt-0 pt-2 mx-0 px-0 border-t-2 border-black lg:border-none align-middle">
-              <p className="w-[40%]">TEAM MEMBERS</p>
-              <p className="w-[40%]">COMPLETION</p>
-              <p className="w-[20%]">EDIT</p>
-              <p className="w-[20%]">DELETE</p>
+            <div className="">
+              <div className="bg-white p-5 rounded-lg shadow-md flex flex-row w-[700px]">
+                <img src="https://www.kendomanager.com/wp-content/uploads/2019/10/project-manager.png" alt="Feature 1" className="h-[160px] w-[120px]" />
+                <div className="ml-[30px] text-left">
+                  <h3 className="text-2xl font-bold mb-2">Project Assignment Module </h3>
+                  <p> Streamline your learning experience with our Project Assignment Module. This feature allows candidates to view, accept, and manage their project assignments effectively. Our user-friendly interface ensures that you can easily track your progress and stay organized as you navigate through your learning journey.</p>
+                </div>
+              </div>
+              <div className="bg-white p-5 rounded-lg shadow-md flex flex-row w-[700px] my-4">
+                <img src="https://www.kendomanager.com/wp-content/uploads/2019/10/project-manager.png" alt="Feature 2" className="h-[160px] w-[120px]" />
+                <div className="ml-[30px] text-left">
+                  <h3 className="text-2xl font-bold mb-2">Progress Tracking and Scoring System</h3>
+                  <p> Stay informed about your development with our Progress Tracking and Scoring System. This innovative mechanism monitors your progress and calculates scores based on task completion. With dynamic data storage and display, you can visualize your growth and achievements throughout your training.</p>
+                </div>
+              </div>
+              <div className="bg-white p-5 rounded-lg shadow-md flex flex-row w-[700px]">
+                <img src="https://www.kendomanager.com/wp-content/uploads/2019/10/project-manager.png" alt="Feature 3" className="h-[160px] w-[120px]" />
+                <div className="ml-[30px] text-left">
+                  <h3 className="text-2xl font-bold mb-2">Expert Guidance and Support</h3>
+                  <p> Benefit from the expertise of our dedicated support team. At IONOTS-TASK-MANAGER, we provide guidance and resources to help you navigate your projects successfully. Our commitment to your learning experience ensures that you have the support you need to thrive in your data science and AI journey.</p>
+                </div>
+              </div>
             </div>
           </div>
-          {
-            projectarray.map(item => {
-              return (
-                <div className="card w-[100%] h-auto bg-green-300 flex border-[2px] border-black text-center items-center py-2 flex-col lg:flex-row" key={item.id}>
-                  <div className="flex lg:w-[50%] w-[100%] lg:pb-0 pb-2 mx-0 px-0">
-                  <div className="w-[40%]" >{item.val.title}</div>
-                  <div className="w-[30%] ">{format(item.val.start ,'d MMMM yyyy')}</div>
-                  <div className="w-[30%] ">{format(item.val.end ,'d MMMM yyyy')}</div>
-                  <div className="w-[30%] flex flex-row items-center"><img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="" className="w-[35px] h-[35px] mr-2" />{item.val.leader}</div></div>
-                  <div className="flex lg:w-[50%] w-[100%] lg:pt-0 pt-2 mx-0 px-0 border-t-2 border-black lg:border-none"><div className="w-[38%] text-wrap px-[0.75%] ">{item.val.intern}</div>
-                  <div className="w-[40%] flex justify-center flex-col">
-                    <input type="range" min={0} max={100} step={10} onInput={e => { progressbar(e) }} name={item.id} className={"accent-red-{item.val.complete}"} defaultValue={item.val.complete} />
-                    <p className="font-bold text-[18px] ml-5">{item.val.complete}</p>
-                  </div>
-                  <div className="w-[20%] flex justify-center"><img className="w-[25%] h-[55%] mx-auto" src="https://cdn-icons-png.flaticon.com/128/2356/2356780.png" alt="" onClick={handleedit} name={item.id} /></div>
-                  <div className="w-[20%] flex justify-center" ><img className="w-[25%] h-[55%] mx-auto" src="https://cdn-icons-png.flaticon.com/128/3405/3405244.png" alt="" onClick={handledelete} name={item.id} /></div></div>
-                </div>
-              
-              )
-            })
-          }
-        </div>}
+        </div>
+      </section>
+
     </div>
-  </>
   );
 }
