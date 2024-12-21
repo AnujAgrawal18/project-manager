@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb';
 import { NextResponse} from "next/server";
 
-const url = "mongodb+srv://anujagrawal1804:tEHS1dIQ2zdjWjNV@projectsinfo.k7fms.mongodb.net/?retryWrites=true&w=majority&appName=projectsinfo";
+const url = "mongodb+srv://anujagrawal1804:<db_password>@projectsinfo.k7fms.mongodb.net/?retryWrites=true&w=majority&appName=projectsinfo";
 const client = new MongoClient(url);
 const dbName = 'myProjectManager';
 
